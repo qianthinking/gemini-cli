@@ -82,9 +82,30 @@ async function relaunchWithAdditionalArgs(additionalArgs: string[]) {
   process.exit(0);
 }
 
+function getSettingFlagValue(args: string[]): string | undefined {
+  const flagPrefix = '--settings=';
+  const flag = '--settings';
+
+  // Start from index 2 to skip `node` and the script name
+  for (let i = 2; i < args.length; i++) {
+    const arg = args[i];
+    if (arg.startsWith(flagPrefix)) {
+      return arg.substring(flagPrefix.length);
+    }
+    if (arg === flag && i + 1 < args.length) {
+      // Make sure the next arg is not another flag
+      if (!args[i + 1].startsWith('-')) {
+        return args[i + 1];
+      }
+    }
+  }
+  return undefined;
+}
+
 export async function main() {
+  const customSettingsPath = getSettingFlagValue(process.argv);
   const workspaceRoot = process.cwd();
-  const settings = loadSettings(workspaceRoot);
+  const settings = loadSettings(workspaceRoot, customSettingsPath);
 
   await cleanupCheckpoints();
   if (settings.errors.length > 0) {
