@@ -53,6 +53,7 @@ interface CliArgs {
   telemetryTarget: string | undefined;
   telemetryOtlpEndpoint: string | undefined;
   telemetryLogPrompts: boolean | undefined;
+  settings: string | undefined;
 }
 
 async function parseArguments(): Promise<CliArgs> {
@@ -127,6 +128,10 @@ async function parseArguments(): Promise<CliArgs> {
       type: 'boolean',
       description: 'Enables checkpointing of file edits',
       default: false,
+    })
+    .option('settings', {
+      type: 'string',
+      description: 'Path to a custom settings.json file.',
     })
     .version(await getCliVersion()) // This will enable the --version flag based on package.json
     .alias('v', 'version')

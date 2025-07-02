@@ -176,7 +176,10 @@ function resolveEnvVarsInObject<T>(obj: T): T {
  * Loads settings from user and workspace directories.
  * Project settings override user settings.
  */
-export function loadSettings(workspaceDir: string): LoadedSettings {
+export function loadSettings(
+  workspaceDir: string,
+  customSettingsPath?: string,
+): LoadedSettings {
   let userSettings: Settings = {};
   let workspaceSettings: Settings = {};
   const settingsErrors: SettingsError[] = [];
@@ -203,11 +206,9 @@ export function loadSettings(workspaceDir: string): LoadedSettings {
     });
   }
 
-  const workspaceSettingsPath = path.join(
-    workspaceDir,
-    SETTINGS_DIRECTORY_NAME,
-    'settings.json',
-  );
+  const workspaceSettingsPath = customSettingsPath
+    ? path.resolve(customSettingsPath)
+    : path.join(workspaceDir, SETTINGS_DIRECTORY_NAME, 'settings.json');
 
   // Load workspace settings
   try {
