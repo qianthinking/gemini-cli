@@ -209,7 +209,8 @@ export async function main() {
   }
   // If not a TTY, read from stdin
   // This is for cases where the user pipes input directly into the command
-  if (!process.stdin.isTTY && !input) {
+  // if (!process.stdin.isTTY && !input) {
+  if (!process.stdin.isTTY) {
     input += await readStdin();
   }
   if (!input) {
